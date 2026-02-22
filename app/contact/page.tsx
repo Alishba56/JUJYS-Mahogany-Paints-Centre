@@ -76,20 +76,39 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '' });
-    
-    // Reset success message after 5 seconds
-    setTimeout(() => setIsSubmitted(false), 5000);
-  };
+  const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const { name, email, phone, company, subject, message } = formData;
+
+  const whatsappMessage = `
+*New Contact Form Submission*
+
+👤 Name: ${name}
+📧 Email: ${email}
+📱 Phone: ${phone}
+🏢 Company: ${company}
+📌 Subject: ${subject}
+
+📝 Message:
+${message}
+  `;
+
+  const encodedMessage = encodeURIComponent(whatsappMessage);
+
+  const whatsappURL = `https://wa.me/254728060501?text=${encodedMessage}`;
+
+  window.open(whatsappURL, '_blank');
+
+  setFormData({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    subject: '',
+    message: '',
+  });
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({
